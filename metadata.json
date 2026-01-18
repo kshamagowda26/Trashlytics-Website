@@ -1,0 +1,7 @@
+{
+  "name": "Copy of Trashlytics",
+  "description": "An AI-powered smart waste segregation and disposal platform for environmental compliance and municipal monitoring.",
+  "requestFramePermissions": [
+    "camera"
+  ]
+}
