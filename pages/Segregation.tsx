@@ -1,6 +1,5 @@
-
 import React, { useState, useRef } from 'react';
-import { Camera, Upload, Trash2, Info, AlertCircle, RefreshCcw, CheckCircle2, ScanLine } from 'lucide-react';
+import { Camera, Trash2, Info, AlertCircle, RefreshCcw, ScanLine, FileText, CheckCircle2 } from 'lucide-react';
 import { identifyWaste } from '../services/geminiService';
 import { WASTE_TYPES } from '../constants';
 import { WasteCategory } from '../types';
@@ -41,6 +40,8 @@ const Segregation: React.FC = () => {
     setResult(null);
   };
 
+  const categories = ['Wet Waste', 'Dry Waste', 'E-Waste', 'Hazardous', 'Plastic', 'Biomedical'];
+
   return (
     <div className="max-w-4xl mx-auto px-4 py-8">
       <div className="flex items-center justify-between mb-8">
@@ -56,13 +57,22 @@ const Segregation: React.FC = () => {
       {!image ? (
         <div 
           onClick={() => fileInputRef.current?.click()}
-          className="border-4 border-dashed border-slate-200 dark:border-slate-800 rounded-3xl p-12 flex flex-col items-center justify-center cursor-pointer hover:border-emerald-500 transition-colors bg-white/50 dark:bg-slate-900/50"
+          className="border-4 border-dashed border-slate-200 dark:border-slate-800 rounded-[2.5rem] p-16 flex flex-col items-center justify-center cursor-pointer hover:border-emerald-500 transition-all bg-white/50 dark:bg-slate-900/50 group"
         >
-          <div className="w-20 h-20 bg-emerald-100 dark:bg-emerald-900/30 rounded-2xl flex items-center justify-center mb-4">
-            <Camera className="w-10 h-10 text-emerald-600" />
+          <div className="w-24 h-24 bg-emerald-100 dark:bg-emerald-900/30 rounded-3xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+            <Camera className="w-12 h-12 text-emerald-600" />
           </div>
-          <h3 className="text-xl font-bold mb-2 text-slate-900 dark:text-white">Capture or Upload</h3>
-          <p className="text-slate-500 text-center max-w-xs">Take a photo of your waste item or upload an image from your gallery</p>
+          <h3 className="text-2xl font-black mb-2 text-slate-900 dark:text-white">Capture or Upload</h3>
+          <p className="text-slate-500 text-center max-w-xs mb-8">Take a photo of your waste item or upload an image from your gallery for instant classification.</p>
+          
+          <div className="flex flex-wrap justify-center gap-2">
+            {categories.map(c => (
+              <span key={c} className="px-3 py-1 bg-slate-100 dark:bg-slate-800 text-[10px] font-black uppercase tracking-widest text-slate-500 dark:text-slate-400 rounded-full border border-slate-200 dark:border-white/5">
+                {c}
+              </span>
+            ))}
+          </div>
+          
           <input 
             type="file" 
             accept="image/*" 
@@ -74,11 +84,11 @@ const Segregation: React.FC = () => {
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-          <div className="relative rounded-2xl overflow-hidden shadow-2xl bg-black aspect-square">
+          <div className="relative rounded-[2rem] overflow-hidden shadow-2xl bg-black aspect-square group">
             <img src={image} alt="Waste" className="w-full h-full object-contain" />
             <button 
               onClick={() => setImage(null)}
-              className="absolute top-4 right-4 p-2 bg-red-500 text-white rounded-full hover:bg-red-600 shadow-lg"
+              className="absolute top-4 right-4 p-3 bg-red-500 text-white rounded-2xl hover:bg-red-600 shadow-xl opacity-0 group-hover:opacity-100 transition-opacity"
             >
               <Trash2 className="w-5 h-5" />
             </button>
@@ -90,47 +100,76 @@ const Segregation: React.FC = () => {
                 <button
                   onClick={handleIdentify}
                   disabled={loading}
-                  className="w-full py-4 bg-emerald-600 text-white rounded-xl font-bold text-lg shadow-xl shadow-emerald-500/20 hover:bg-emerald-700 transition-all flex items-center justify-center gap-3 disabled:opacity-50"
+                  className="w-full py-5 bg-emerald-600 text-white rounded-[1.5rem] font-black text-xl shadow-xl shadow-emerald-500/20 hover:bg-emerald-700 transition-all flex flex-col items-center justify-center gap-2 disabled:opacity-80"
                 >
                   {loading ? (
                     <>
-                      <div className="w-6 h-6 border-4 border-white border-t-transparent rounded-full animate-spin mb-1"></div>
-                      Analyzing with Gemini AI...
+                      <div className="w-8 h-8 border-4 border-white border-t-transparent rounded-full animate-spin mb-1"></div>
+                      <span className="tracking-tight">Identifying Waste Type...</span>
                     </>
                   ) : (
                     <>
-                      <ScanLine className="w-6 h-6" />
-                      Identify Category
+                      <ScanLine className="w-7 h-7" />
+                      Identify Type of Waste
                     </>
                   )}
                 </button>
-                <div className="mt-8 p-4 bg-blue-50 dark:bg-blue-900/20 rounded-xl flex items-start gap-3">
-                  <Info className="w-5 h-5 text-blue-500 shrink-0 mt-1" />
-                  <p className="text-sm text-blue-700 dark:text-blue-300">
-                    Our AI models can distinguish between plastics, organic waste, e-waste, and more.
+                
+                <div className="mt-8 space-y-4">
+                  <p className="text-[10px] font-black text-slate-500 uppercase tracking-[0.2em] text-center">AI SEARCHING FOR:</p>
+                  <div className="grid grid-cols-2 gap-2">
+                    {['Wet Waste', 'Dry Waste', 'E-Waste', 'Hazardous'].map(t => (
+                      <div key={t} className={`p-3 rounded-xl border flex items-center gap-2 transition-opacity ${loading ? 'animate-pulse' : 'opacity-40'} bg-white/5 border-white/10`}>
+                        <div className="w-2 h-2 rounded-full bg-emerald-500"></div>
+                        <span className="text-[10px] font-bold text-slate-300 uppercase tracking-tighter">{t}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                <div className="mt-10 p-5 bg-blue-50 dark:bg-blue-900/20 rounded-2xl flex items-start gap-4 border border-blue-100 dark:border-blue-800">
+                  <Info className="w-6 h-6 text-blue-500 shrink-0" />
+                  <p className="text-xs text-blue-700 dark:text-blue-300 leading-relaxed font-medium">
+                    Our vision engine uses advanced multi-modal models to distinguish complex waste streams including chemical hazards and electronic components.
                   </p>
                 </div>
               </div>
             ) : (
-              <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
-                <div className="p-6 bg-white dark:bg-slate-800 rounded-2xl shadow-sm border-2 border-emerald-500/30">
-                  <div className="flex items-center gap-3 mb-4">
-                    <div className={`p-3 rounded-xl text-white ${WASTE_TYPES[result.category]?.color || 'bg-slate-500'}`}>
-                      {WASTE_TYPES[result.category]?.icon || <Trash2 className="w-6 h-6" />}
+              <div className="space-y-6 animate-in fade-in slide-in-from-bottom-6 duration-700">
+                <div className="p-8 bg-white dark:bg-slate-900 rounded-[2.5rem] shadow-xl border border-slate-100 dark:border-white/10">
+                  <div className="flex items-center gap-5 mb-8">
+                    <div className={`p-5 rounded-[1.5rem] text-white shadow-lg ${WASTE_TYPES[result.category]?.color || 'bg-slate-500'}`}>
+                      {WASTE_TYPES[result.category]?.icon || <Trash2 className="w-10 h-10" />}
                     </div>
                     <div>
-                      <span className="text-xs font-bold text-emerald-600 dark:text-emerald-400 uppercase tracking-widest">Identified As</span>
-                      <h2 className="text-2xl font-black text-slate-900 dark:text-white">{result.category}</h2>
+                      <div className="flex items-center gap-2 mb-1">
+                        <CheckCircle2 className="w-4 h-4 text-emerald-500" />
+                        <span className="text-[10px] font-black text-emerald-500 uppercase tracking-[0.3em]">AI Classification Verified</span>
+                      </div>
+                      <h4 className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Detected Waste Type:</h4>
+                      <h2 className="text-4xl font-black text-slate-900 dark:text-white leading-tight">{result.category}</h2>
                     </div>
                   </div>
                   
-                  <div className="space-y-4">
-                    <div className="flex items-start gap-2">
+                  <div className="space-y-6 pt-6 border-t border-slate-100 dark:border-white/5">
+                    <div className="flex items-start gap-4">
+                      <FileText className="w-5 h-5 text-emerald-500 shrink-0 mt-1" />
+                      <div>
+                        <p className="text-[10px] font-black uppercase text-slate-500 tracking-wider mb-1">Disposal Instructions</p>
+                        <p className="text-sm text-slate-600 dark:text-slate-300 leading-relaxed font-medium">
+                          {result.instructions}
+                        </p>
+                      </div>
+                    </div>
+                    
+                    <div className="flex items-start gap-4">
                       <AlertCircle className="w-5 h-5 text-amber-500 shrink-0 mt-1" />
-                      <p className="text-slate-600 dark:text-slate-400">
-                        <span className="font-bold text-slate-900 dark:text-white">Environmental Impact: </span>
-                        {result.impact}
-                      </p>
+                      <div>
+                        <p className="text-[10px] font-black uppercase text-slate-500 tracking-wider mb-1">Environmental Impact</p>
+                        <p className="text-sm text-slate-600 dark:text-slate-300 leading-relaxed font-medium italic opacity-80">
+                          {result.impact}
+                        </p>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -138,9 +177,10 @@ const Segregation: React.FC = () => {
                 <div className="flex gap-4">
                   <button 
                     onClick={reset}
-                    className="w-full py-4 bg-slate-100 dark:bg-slate-800 font-bold rounded-xl hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors text-slate-900 dark:text-white"
+                    className="w-full py-5 bg-white dark:bg-slate-800 font-black rounded-2xl hover:bg-slate-50 dark:hover:bg-slate-700 transition-all text-slate-900 dark:text-white flex items-center justify-center gap-3 border border-slate-200 dark:border-white/10 shadow-sm"
                   >
-                    Scan Another Item
+                    <RefreshCcw className="w-5 h-5 text-emerald-500" />
+                    New Scan
                   </button>
                 </div>
               </div>
