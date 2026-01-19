@@ -1,13 +1,12 @@
 
 import React, { useState, useRef } from 'react';
-import { Camera, Upload, Trash2, Info, AlertCircle, RefreshCcw, CheckCircle2, ScanLine, Tag } from 'lucide-react';
+import { Camera, Upload, Trash2, Info, AlertCircle, RefreshCcw, CheckCircle2, ScanLine } from 'lucide-react';
 import { identifyWaste } from '../services/geminiService';
 import { WASTE_TYPES } from '../constants';
 import { WasteCategory } from '../types';
 
 const Segregation: React.FC = () => {
   const [image, setImage] = useState<string | null>(null);
-  const [wasteTypeInput, setWasteTypeInput] = useState('');
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState<{ category: WasteCategory; instructions: string; impact: string } | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -40,7 +39,6 @@ const Segregation: React.FC = () => {
   const reset = () => {
     setImage(null);
     setResult(null);
-    setWasteTypeInput('');
   };
 
   return (
@@ -54,22 +52,6 @@ const Segregation: React.FC = () => {
           <RefreshCcw className="w-6 h-6" />
         </button>
       </div>
-
-      {!image && (
-        <div className="mb-8 p-6 bg-white dark:bg-slate-800 rounded-3xl border border-slate-100 dark:border-slate-800 shadow-sm">
-          <label className="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-2 flex items-center gap-2">
-            <Tag className="w-4 h-4 text-emerald-500" />
-            Waste Item Type (Optional)
-          </label>
-          <input 
-            type="text" 
-            placeholder="e.g. Plastic bottle, Apple core..."
-            value={wasteTypeInput}
-            onChange={(e) => setWasteTypeInput(e.target.value)}
-            className="w-full px-4 py-3 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-emerald-500 outline-none transition-all text-slate-900 dark:text-white"
-          />
-        </div>
-      )}
 
       {!image ? (
         <div 
@@ -112,7 +94,7 @@ const Segregation: React.FC = () => {
                 >
                   {loading ? (
                     <>
-                      <div className="w-6 h-6 border-4 border-white border-t-transparent rounded-full animate-spin"></div>
+                      <div className="w-6 h-6 border-4 border-white border-t-transparent rounded-full animate-spin mb-1"></div>
                       Analyzing with Gemini AI...
                     </>
                   ) : (
@@ -143,13 +125,6 @@ const Segregation: React.FC = () => {
                   </div>
                   
                   <div className="space-y-4">
-                    <div className="flex items-start gap-2">
-                      <CheckCircle2 className="w-5 h-5 text-emerald-500 shrink-0 mt-1" />
-                      <p className="text-slate-600 dark:text-slate-400">
-                        <span className="font-bold text-slate-900 dark:text-white">Instructions: </span>
-                        {result.instructions}
-                      </p>
-                    </div>
                     <div className="flex items-start gap-2">
                       <AlertCircle className="w-5 h-5 text-amber-500 shrink-0 mt-1" />
                       <p className="text-slate-600 dark:text-slate-400">

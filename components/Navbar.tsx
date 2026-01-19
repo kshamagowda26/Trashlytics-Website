@@ -14,8 +14,8 @@ const Navbar: React.FC<NavbarProps> = ({ onLogout, theme, toggleTheme }) => {
   const navItems = [
     { to: '/home', icon: <Home className="w-5 h-5" />, label: 'Home' },
     { to: '/segregation', icon: <ScanLine className="w-5 h-5" />, label: 'Segregate' },
-    { to: '/analytics', icon: <BarChart3 className="w-5 h-5" />, label: 'Analytics' },
     { to: '/report', icon: <FileWarning className="w-5 h-5" />, label: 'Report' },
+    { to: '/analytics', icon: <BarChart3 className="w-5 h-5" />, label: 'Analytics' },
     { to: '/smart-bin', icon: <HelpCircle className="w-5 h-5" />, label: 'Smart Bin' },
     { to: '/profile', icon: <User className="w-5 h-5" />, label: 'Profile' },
   ];

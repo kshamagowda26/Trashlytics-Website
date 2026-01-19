@@ -6,14 +6,16 @@ import {
   Moon, 
   Sun, 
   LogOut, 
-  Shield, 
   Mail, 
   Settings, 
-  ChevronRight,
   User as UserIcon,
   Trash2,
   Award,
-  Calendar
+  Calendar,
+  Clock,
+  CheckCircle2,
+  ChevronRight,
+  Activity
 } from 'lucide-react';
 
 interface ProfileProps {
@@ -24,6 +26,13 @@ interface ProfileProps {
 }
 
 const Profile: React.FC<ProfileProps> = ({ user, theme, toggleTheme, onLogout }) => {
+  const activityHistory = [
+    { id: 1, type: 'Waste Scanned', detail: 'Identified Plastic Bottle', time: '2 hours ago', status: 'Completed', icon: <Trash2 className="w-4 h-4" /> },
+    { id: 2, type: 'Official Report', detail: 'Illegal dumping reported in Sector 7', time: 'Yesterday', status: 'In Review', icon: <Activity className="w-4 h-4 text-amber-500" /> },
+    { id: 3, type: 'Smart Bin Use', detail: 'Disposal at Node_01', time: '2 days ago', status: 'Completed', icon: <CheckCircle2 className="w-4 h-4 text-emerald-500" /> },
+    { id: 4, type: 'Achievement', detail: 'Sustainable Citizen Badge Earned', time: '3 days ago', status: 'Verified', icon: <Award className="w-4 h-4 text-purple-500" /> },
+  ];
+
   return (
     <div className="max-w-4xl mx-auto px-4 py-8">
       <div className="mb-12 flex flex-col items-center">
@@ -37,39 +46,60 @@ const Profile: React.FC<ProfileProps> = ({ user, theme, toggleTheme, onLogout })
             <Award className="w-5 h-5" />
           </div>
         </div>
-        <h1 className="text-3xl font-black text-slate-900 dark:text-white">{user.name}</h1>
-        <p className="text-slate-500 dark:text-slate-400">{user.email}</p>
+        <h1 className="text-3xl font-black text-slate-900 dark:text-white tracking-tight">{user.name}</h1>
+        <p className="text-slate-500 dark:text-slate-400 font-medium">{user.email}</p>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-12">
-        <div className="p-6 bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-800 text-center">
-          <Trash2 className="w-8 h-8 mx-auto mb-2 text-emerald-500" />
-          <h4 className="text-2xl font-black">128</h4>
-          <p className="text-xs text-slate-500 font-bold uppercase">Items Scanned</p>
+      {/* History Dashboard Section */}
+      <div className="mb-12 space-y-4">
+        <div className="flex items-center justify-between">
+          <h2 className="text-xl font-black flex items-center gap-2">
+            <Clock className="w-6 h-6 text-emerald-500" />
+            Recent Activity History
+          </h2>
+          <button className="text-xs font-black uppercase tracking-widest text-emerald-500 hover:text-emerald-400">View Full Logs</button>
         </div>
-        <div className="p-6 bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-800 text-center">
-          <Shield className="w-8 h-8 mx-auto mb-2 text-blue-500" />
-          <h4 className="text-2xl font-black">Top 1%</h4>
-          <p className="text-xs text-slate-500 font-bold uppercase">Impact Rank</p>
-        </div>
-        <div className="p-6 bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-800 text-center">
-          <Calendar className="w-8 h-8 mx-auto mb-2 text-purple-500" />
-          <h4 className="text-2xl font-black">42 Days</h4>
-          <p className="text-xs text-slate-500 font-bold uppercase">Streak</p>
+        
+        <div className="bg-white dark:bg-slate-900 rounded-[2rem] border border-slate-200 dark:border-white/10 overflow-hidden shadow-sm">
+          <div className="divide-y divide-slate-100 dark:divide-white/5">
+            {activityHistory.map((item) => (
+              <div key={item.id} className="p-5 flex items-center justify-between hover:bg-slate-50 dark:hover:bg-white/5 transition-colors group">
+                <div className="flex items-center gap-4">
+                  <div className="p-3 bg-slate-100 dark:bg-slate-800 rounded-xl group-hover:bg-white dark:group-hover:bg-slate-700 transition-colors">
+                    {item.icon}
+                  </div>
+                  <div>
+                    <h4 className="font-bold text-sm text-slate-900 dark:text-white">{item.type}</h4>
+                    <p className="text-xs text-slate-500 dark:text-slate-400">{item.detail}</p>
+                  </div>
+                </div>
+                <div className="text-right">
+                  <p className="text-[10px] font-black uppercase text-slate-400 tracking-tighter mb-1">{item.time}</p>
+                  <span className={`text-[10px] font-black px-2 py-0.5 rounded-full ${
+                    item.status === 'Completed' ? 'bg-emerald-500/10 text-emerald-500' :
+                    item.status === 'In Review' ? 'bg-amber-500/10 text-amber-500' :
+                    'bg-purple-500/10 text-purple-500'
+                  }`}>
+                    {item.status}
+                  </span>
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
       </div>
 
       <div className="space-y-4">
         <h2 className="text-xl font-black mb-4 flex items-center gap-2">
-          <Settings className="w-6 h-6" />
-          Website Settings
+          <Settings className="w-6 h-6 text-slate-400" />
+          Settings & Preferences
         </h2>
         
-        <div className="bg-white dark:bg-slate-800 rounded-3xl overflow-hidden shadow-sm border border-slate-100 dark:border-slate-800">
-          <div className="divide-y divide-slate-100 dark:divide-slate-700">
+        <div className="bg-white dark:bg-slate-900 rounded-[2rem] overflow-hidden shadow-sm border border-slate-200 dark:border-white/10">
+          <div className="divide-y divide-slate-100 dark:divide-white/5">
             <div className="p-6 flex items-center justify-between">
               <div className="flex items-center gap-4">
-                <div className="p-3 bg-slate-100 dark:bg-slate-700 rounded-xl">
+                <div className="p-3 bg-slate-100 dark:bg-slate-800 rounded-xl">
                   {theme === Theme.LIGHT ? <Sun className="w-6 h-6" /> : <Moon className="w-6 h-6 text-yellow-400" />}
                 </div>
                 <div>
@@ -87,7 +117,7 @@ const Profile: React.FC<ProfileProps> = ({ user, theme, toggleTheme, onLogout })
 
             <div className="p-6 flex items-center justify-between">
               <div className="flex items-center gap-4">
-                <div className="p-3 bg-slate-100 dark:bg-slate-700 rounded-xl">
+                <div className="p-3 bg-slate-100 dark:bg-slate-800 rounded-xl">
                   <Bell className="w-6 h-6" />
                 </div>
                 <div>
@@ -102,7 +132,7 @@ const Profile: React.FC<ProfileProps> = ({ user, theme, toggleTheme, onLogout })
 
             <div className="p-6 flex items-center justify-between">
               <div className="flex items-center gap-4">
-                <div className="p-3 bg-slate-100 dark:bg-slate-700 rounded-xl">
+                <div className="p-3 bg-slate-100 dark:bg-slate-800 rounded-xl">
                   <Mail className="w-6 h-6" />
                 </div>
                 <div>
@@ -119,7 +149,7 @@ const Profile: React.FC<ProfileProps> = ({ user, theme, toggleTheme, onLogout })
 
         <button 
           onClick={onLogout}
-          className="w-full mt-8 py-4 bg-red-50 dark:bg-red-900/10 text-red-600 dark:text-red-400 font-bold rounded-2xl flex items-center justify-center gap-2 hover:bg-red-100 dark:hover:bg-red-900/20 transition-colors"
+          className="w-full mt-8 py-4 bg-red-500/10 text-red-500 font-bold rounded-2xl flex items-center justify-center gap-2 hover:bg-red-500/20 transition-all active:scale-[0.98]"
         >
           <LogOut className="w-5 h-5" />
           Log Out of Trashlytics

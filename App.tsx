@@ -19,7 +19,8 @@ const App: React.FC = () => {
   });
   const [theme, setTheme] = useState<Theme>(() => {
     const saved = localStorage.getItem('trashlytics_theme');
-    return (saved as Theme) || Theme.LIGHT;
+    // Defaulting to DARK mode as requested
+    return (saved as Theme) || Theme.DARK;
   });
 
   useEffect(() => {
@@ -49,7 +50,7 @@ const App: React.FC = () => {
 
   return (
     <Router>
-      <div className={`min-h-screen transition-colors duration-300 ${theme === Theme.DARK ? 'bg-slate-900 text-white' : 'bg-slate-50 text-slate-900'}`}>
+      <div className={`min-h-screen transition-colors duration-300 ${theme === Theme.DARK ? 'bg-slate-950 text-white' : 'bg-slate-50 text-slate-900'}`}>
         {user && <Navbar onLogout={handleLogout} theme={theme} toggleTheme={toggleTheme} />}
         <main className={`${user ? 'pt-20' : ''}`}>
           <Routes>
